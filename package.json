@@ -1,8 +1,11 @@
 {
   "name": "kartograph",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Kartograph scans your JS/TS codebase, generates a structured codemap, and exposes it via an MCP server.",
+  "main": "bin/kartograph.js",
+  "bin": {
+    "kartograph": "bin/kartograph.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,7 +13,14 @@
     "type": "git",
     "url": "git+https://github.com/wolf1729/Kartograph.git"
   },
-  "keywords": [],
+  "keywords": [
+    "mcp",
+    "codemap",
+    "typescript",
+    "javascript",
+    "ai-agent",
+    "developer-tools"
+  ],
   "author": "",
   "license": "MIT",
   "type": "commonjs",
@@ -26,5 +36,10 @@
   "dependencies": {
     "chokidar": "^5.0.0",
     "commander": "^14.0.3"
-  }
+  },
+  "files": [
+    "bin",
+    "README.md",
+    "package.json"
+  ]
 }
