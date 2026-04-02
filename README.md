@@ -28,44 +28,67 @@ Instead of your agent blindly reading files, it calls `search_types("Order")` an
 - **Onboarding to a new codebase**: Index your project once, give your AI agent the full picture
 - **In CI/CD**: Keep the codemap fresh on every commit, so your agent always has current context
 
+## Requirements
+
+- Node.js 18+
+- Works with both JavaScript and TypeScript codebases
+- TypeScript projects should use a project `tsconfig.json` for best results
+
 ## How It Works
 
-1. **Scan**: Kartograph analyzes your JS/TS codebase (interfaces, types, functions, exports)
-2. **Map**: Generates a structured, queryable codemap (JSON or similar format)
-3. **Serve**: Exposes the codemap via an MCP (Model Context Protocol) server
-4. **Query**: Your AI agent uses the MCP tools to search and understand structure in one call
+1. **Compile**: `npx kartograph compile-for-ai` scans your JS/TS codebase and builds the codemap artifacts
+2. **Write**: Outputs a structured `codemap.json` plus human-readable map files in `.codemap/`
+3. **Serve**: `npx kartograph mcp` exposes the codemap through an MCP (Model Context Protocol) server
+4. **Sync**: `npx kartograph watch` keeps the codemap fresh as files change (local dev or CI workflows)
 
 ## Installation
 
+Use one of these two options:
+
+1. Run directly with `npx` (no install):
+
 ```bash
-npm install kartograph
+npx kartograph compile-for-ai
+```
+
+2. Install globally for repeated local usage:
+
+```bash
+npm install -g kartograph
 ```
 
 ## Usage
 
 ```bash
-kartograph --scan ./src
+npx kartograph compile-for-ai
+npx kartograph watch
+npx kartograph mcp
 ```
 
-This generates a codemap that can be:
-- Exported as JSON for inspection
-- Served via MCP for agent integration
-- Committed to your repo or stored in CI
+## What It Generates
+
+Kartograph writes the following artifacts to your repository:
+
+- `.codemap/overview.md` - High-level project summary (modules, major flows, and key entry points).
+- `.codemap/types.md` - Consolidated type and interface index with links to source locations.
+- `.codemap/endpoints.md` - HTTP/API endpoint inventory with handler mappings and related types.
+- `.codemap/architecture.md` - Component-level architecture view and service/module relationships.
+- `.codemap/codemap.json` - Machine-readable source of truth used by MCP tools.
+- `.codemap/dashboard.html` - Human-friendly visual dashboard for browsing codemap insights.
+- `.vscode/mcp.json` - MCP server configuration for local agent/editor integration.
 
 ## Integration with AI Agents
 
 Once running, Kartograph exposes MCP tools that agents can call:
-- `search_types(name)` — Find type/interface definitions
-- `search_functions(name)` — Find function signatures
-- `search_exports(file)` — List what a module exports
-- `get_file_structure(file)` — Understand a file's layout without reading it all
-
-## Development
-
-```bash
-npm run test
-```
+- `get_overview` - Returns a project-wide summary so agents can reason about structure before editing.
+- `search_types` - Finds matching types/interfaces by name and returns where they are defined.
+- `get_type_details` - Expands a specific type with fields, signatures, and related references.
+- `get_endpoints` - Lists API endpoints, methods, routes, and linked handlers.
+- `get_architecture` - Provides module/service dependency topology and high-level flow information.
+- `get_file_context` - Returns focused structural context for one file without full-file crawling.
+- `get_diagnostics` - Surfaces codemap/build diagnostics so agents can avoid broken assumptions.
+- `get_dependencies` - Shows dependency relationships between files/modules/packages.
 
 ## License
 
-ISC
+MIT
